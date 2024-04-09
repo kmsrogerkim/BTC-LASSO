@@ -5,6 +5,8 @@ from datetime import datetime
 from tqdm import tqdm
 import logging
 
+from multiprocessing import Process
+
 def save_to_csv(date, ord_currency, df: pd.DataFrame, logger):
     '''
     ord_currency = btc or eth
@@ -35,8 +37,7 @@ def main_task(ord_currency, logger, i):
     if i == 0:
         #Initialize DF
         empty_df = pd.DataFrame()
-        empty_df.to_csv(f"./data/book-{date}-bithumb-btc.csv")
-        empty_df.to_csv(f"./data/book-{date}-bithumb-eth.csv")
+        empty_df.to_csv(f"./data/book-{date}-bithumb-{ord_currency.lower()}.csv")
     #bids를 pandas의 데이터프레임으로 바꾸고 정렬
     try:
         bids = (pd.DataFrame(data['bids'])).apply(pd.to_numeric)
@@ -68,10 +69,20 @@ def main():
     logger = logging.getLogger()
 
     for i in tqdm(range(17280)):
-        ord_currency="ETH"
-        main_task(ord_currency, logger, i)
+        start_time = time.time()
 
-        time.sleep(5)
+        p1 = Process(target=main_task, args=("ETH", logger, i))
+        p2 = Process(target=main_task, args=("BTC", logger, i))
+
+        p1.start()
+        p2.start()
+
+        p1.join() 
+        p2.join() 
+
+        remaining = time.time() - start_time
+        if remaining < 5:
+            time.sleep(5 - remaining)
 
 if __name__ == "__main__":
     main()
