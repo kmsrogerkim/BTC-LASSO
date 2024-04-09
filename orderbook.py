@@ -1,8 +1,8 @@
 import time
 import requests
 import pandas as pd
-from datetime import datetime
-from tqdm import tqdm
+from datetime import datetime, timedelta
+from tqdm import tqdm, trange
 import logging
 
 from multiprocessing import Process
@@ -67,6 +67,12 @@ def main():
     #For logging
     logging.basicConfig(filename="./data/log/collect_orderbook.log", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     logger = logging.getLogger()
+
+    tomorrow = datetime.now() + timedelta(days=1)
+    tomorrow = tomorrow.replace(hour=0, minute=0, second=0, microsecond=0)
+    time_til_tmr = (tomorrow - datetime.now()).total_seconds()
+    print(f"\nSYSTEM: Time left until tommorrow {time_til_tmr} seconds. Proceed to continue after {time_til_tmr} seconds")
+    time.sleep(time_til_tmr)
 
     for i in tqdm(range(17280)):
         start_time = time.time()
