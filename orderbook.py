@@ -7,7 +7,7 @@ import logging
 
 from multiprocessing import Process
 
-def save_to_csv(date, ord_currency, df: pd.DataFrame, logger):
+def save_to_csv(date, ord_currency, df: pd.DataFrame):
     '''
     ord_currency = btc or eth
     '''
@@ -15,22 +15,20 @@ def save_to_csv(date, ord_currency, df: pd.DataFrame, logger):
     old_df = pd.read_csv(f"./data/{file_name}")
     df = pd.concat([old_df, df], ignore_index=True)
     df.to_csv(f"./data/{file_name}", index=False)
-    logger.info(f"saved file: {file_name}")
 
-def get_book(ord_currency: str, logger) -> dict:
+def get_book(ord_currency: str) -> dict:
     '''
     ord_currency = BTC or ETH
     '''
     book = {}
     response = requests.get(f"https://api.bithumb.com/public/orderbook/{ord_currency}_KRW/?count=5")
     if response.status_code != 200:
-        logger.error("BAD RESPONSE")
         raise Exception
     book = response.json()
     return book['data']
 
-def main_task(ord_currency, logger, i):
-    data = get_book(ord_currency, logger)
+def main_task(ord_currency, i):
+    data = get_book(ord_currency)
     now = datetime.now()
     timestamp = now.strftime('%Y-%m-%d %H:%M:%S.%f')
     date = now.strftime('%Y-%m-%d')
@@ -45,7 +43,7 @@ def main_task(ord_currency, logger, i):
         bids = bids.reset_index(); del bids['index']
         bids['type'] = 0
     except Exception as e:
-        logger.error(f"{e}")
+        print(e)
 
     #ask를 pandas의 데이터프레임으로 바꾸고 정렬
     try:
@@ -53,7 +51,6 @@ def main_task(ord_currency, logger, i):
         asks.sort_values('price', ascending=True, inplace=True)
         asks['type'] = 1
     except Exception as e:
-        logger.error(f"{e}")
         time.sleep(5)
         return False
     
@@ -61,24 +58,20 @@ def main_task(ord_currency, logger, i):
     timestamp = [timestamp] * 10
     df["timestamp"] = timestamp
     ord_currency = ord_currency.lower()
-    save_to_csv(date, ord_currency, df,logger)
+    save_to_csv(date, ord_currency, df)
 
 def main():
-    #For logging
-    logging.basicConfig(filename="./data/log/collect_orderbook.log", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    logger = logging.getLogger()
-
     tomorrow = datetime.now() + timedelta(days=1)
     tomorrow = tomorrow.replace(hour=0, minute=0, second=0, microsecond=0)
     time_til_tmr = (tomorrow - datetime.now()).total_seconds()
     print(f"\nSYSTEM: Time left until tommorrow {time_til_tmr} seconds. Proceed to continue after {time_til_tmr} seconds")
-    time.sleep(time_til_tmr)
+    # time.sleep(time_til_tmr)
 
     for i in tqdm(range(17280)):
         start_time = time.time()
 
-        p1 = Process(target=main_task, args=("ETH", logger, i))
-        p2 = Process(target=main_task, args=("BTC", logger, i))
+        p1 = Process(target=main_task, args=("ETH", i))
+        p2 = Process(target=main_task, args=("BTC", i))
 
         p1.start()
         p2.start()
