@@ -36,6 +36,9 @@ def main_task(ord_currency, i):
         #Initialize DF
         empty_df = pd.DataFrame()
         empty_df.to_csv(f"./data/book-{date}-bithumb-{ord_currency.lower()}.csv")
+        
+        date_tmr = (now.date() + timedelta(days=1)).strftime('%Y-%m-%d')
+        empty_df.to_csv(f"./data/book-{date_tmr}-bithumb-{ord_currency.lower()}.csv")
     #bids를 pandas의 데이터프레임으로 바꾸고 정렬
     try:
         bids = (pd.DataFrame(data['bids'])).apply(pd.to_numeric)
