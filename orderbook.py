@@ -68,7 +68,7 @@ def main():
     tomorrow = tomorrow.replace(hour=0, minute=0, second=0, microsecond=0)
     time_til_tmr = (tomorrow - datetime.now()).total_seconds()
     print(f"\nSYSTEM: Time left until tommorrow {time_til_tmr} seconds. Proceed to continue after {time_til_tmr} seconds")
-    # time.sleep(time_til_tmr)
+    time.sleep(time_til_tmr)
 
     for i in tqdm(range(17280)):
         start_time = time.time()
