@@ -1,6 +1,6 @@
 # ai-cryptocurrency Project
 ## Dear Professor,
-All the files for project phase 3 is in the (prj_3 directory)[https://github.com/RogerKimJazzLover/ai-crypto-midterm/tree/main/prj_3]
+All the files for project phase 3 is in the [prj_3 directory](https://github.com/RogerKimJazzLover/ai-crypto-midterm/tree/main/prj_3)
 
 ## Team Members
 - 김민승 ([Github](github.com/rogerkimjazzlover))
