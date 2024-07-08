@@ -22,7 +22,7 @@ These are listed in `requirements.txt` in the `Docs` folder. Use the below comma
 ## 🛐 How to run
 
 - ```pip install -r requirements.txt```
-- ```combine_book.py```
+- ```python combine_book.py```
 - Then, just run the files you want to try out.
 
 ## 🤖 Contributors
