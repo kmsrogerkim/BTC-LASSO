@@ -11,10 +11,10 @@ def save_to_csv(date, ord_currency, df: pd.DataFrame):
     '''
     ord_currency = btc or eth
     '''
-    file_name = f"book-{date}-bithumb-{ord_currency}.csv"
-    old_df = pd.read_csv(f"./data/{file_name}")
+    file_name = f"book-{date}-bithumb-{ord_currency}.csv" 
+    old_df = pd.read_csv(f"./data/collected_orderbooks/{file_name}")
     df = pd.concat([old_df, df], ignore_index=True)
-    df.to_csv(f"./data/{file_name}", index=False)
+    df.to_csv(f"./data/collected_orderbooks/{file_name}", index=False)
 
 def get_book(ord_currency: str) -> dict:
     '''
@@ -35,10 +35,10 @@ def main_task(ord_currency, i):
     if i == 0:
         #Initialize DF
         empty_df = pd.DataFrame()
-        empty_df.to_csv(f"./data/book-{date}-bithumb-{ord_currency.lower()}.csv")
+        empty_df.to_csv(f"./data/collected_orderbooks/book-{date}-bithumb-{ord_currency.lower()}.csv")
         
         date_tmr = (now.date() + timedelta(days=1)).strftime('%Y-%m-%d')
-        empty_df.to_csv(f"./data/book-{date_tmr}-bithumb-{ord_currency.lower()}.csv")
+        empty_df.to_csv(f"./data/collected_orderbooks/book-{date_tmr}-bithumb-{ord_currency.lower()}.csv")
     #bids를 pandas의 데이터프레임으로 바꾸고 정렬
     try:
         bids = (pd.DataFrame(data['bids'])).apply(pd.to_numeric)
