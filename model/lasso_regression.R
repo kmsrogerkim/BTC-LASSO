@@ -11,7 +11,7 @@
 
 ####### Usage: Finding a Model
 # arguemnts: start-time end-time exchange coin-symbol mid5
-# $Rscript ./ai-crypto-project-3-lasso.R '2024-05-01T00:00:00' '2024-05-01T23:59:00' upbit BTC mid5
+# $Rscript ./lasso_regression.R '2024-05-01T00:00:00' '2024-05-01T23:59:00' upbit BTC mid5
 
 library('stringr')
 library('glmnet')
